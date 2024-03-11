@@ -116,16 +116,9 @@ sub decode_certs ($data) {
 }
 
 sub fetch ($url) {
-  my $cache_file = Mojo::File->new("/var/tmp/cert-compare-".sha256_hex($url));
-  my $body;
-  if ($cache_file->stat) {
-    $body = $cache_file->slurp;
-  } else {
-    my $res = $ua->get($url)->result;
-    die "Failed getting $url: ".$res->code unless $res->is_success;
-    $body = $res->body;
-    $cache_file->spew($body);
-  }
+  my $res = $ua->get($url)->result;
+  die "Failed getting $url: ".$res->code unless $res->is_success;
+  my $body = $res->body;
   return $body;
 }
 
